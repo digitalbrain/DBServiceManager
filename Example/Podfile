@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'DBServiceManager_Example' do
+  pod 'DBServiceManager', :path => '../'
+
+  target 'DBServiceManager_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
