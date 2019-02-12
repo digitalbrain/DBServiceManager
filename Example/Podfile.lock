@@ -1,0 +1,16 @@
+PODS:
+  - DBServiceManager (0.1.0)
+
+DEPENDENCIES:
+  - DBServiceManager (from `../`)
+
+EXTERNAL SOURCES:
+  DBServiceManager:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  DBServiceManager: 454936a99012a3e044e5ad041e671c96d46fcd4f
+
+PODFILE CHECKSUM: 38113e79cf5e1d993fe2bbf387b9d693f64ec643
+
+COCOAPODS: 1.5.2

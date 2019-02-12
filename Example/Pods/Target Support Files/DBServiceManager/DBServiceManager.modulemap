@@ -1,0 +1,6 @@
+framework module DBServiceManager {
+  umbrella header "DBServiceManager-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,168 @@
+//
+//  ServiceManager.swift
+//  MxmSDK
+//
+//  Created by Massimiliano on 15/02/17.
+//  Copyright © 2017 01TRIBE. All rights reserved.
+//
+
+import UIKit
+
+public enum HttpMethod : String, RawRepresentable {
+    case post = "POST"
+    case get = "GET"
+}
+
+public typealias ServiceCompletionHandler = ((_ result: Data?, _ error: Error?) -> ())
+
+open class ServiceManager: NSObject, URLSessionDelegate {
+
+    public static let shared = ServiceManager()
+
+    public var sessionConfiguration = URLSessionConfiguration.default
+    
+
+    
+    /**
+     Costruisce la URL request
+     - parameter endPoint : l'url
+     - parameter parameters : Dizionario con chiave e valore dei parametri da inviare nella richiesta
+     - parameter headers : Dizionario chiave valore dei campi da inviare come Http header
+     - parameter httpMethod: Get/Post
+     */
+    func request(withUrl endPoint:String, parameters: [String : Any], headers: [String : String], httpMethod: HttpMethod) -> URLRequest {
+        var request: URLRequest = URLRequest(url: URL(string: endPoint)!)
+        request.httpMethod = httpMethod.rawValue
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
+            request.httpBody = jsonData
+            
+        } catch {
+            
+        }
+        for aKey in headers.keys {
+            request.setValue(headers[aKey], forHTTPHeaderField: aKey)
+        }
+
+        return request
+    }
+    
+   
+    @discardableResult  func callEndpoint(withUrl endPoint:String, parameters: [String : Any], headers: [String : String], httpMethod: HttpMethod, completion: ServiceCompletionHandler?) -> URLSessionTask {
+        let request = self.request(withUrl: endPoint, parameters: parameters, headers: headers, httpMethod: httpMethod)
+        return self.callEndpoint(withRequest: request, completion: completion)
+    }
+    
+    
+    @discardableResult func callEndpoint(withRequest request: URLRequest, completion: ServiceCompletionHandler?) -> URLSessionTask {
+    
+        print("Start Req to \(request.url?.absoluteString ?? "")")
+        
+        if let bodyData = request.httpBody {
+            NSLog("Request data:\n \(NSString(data:bodyData, encoding:1) ?? "")")
+        }
+        var urlSession: URLSession? = URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: nil)//URLSession(configuration: self.sessionConfiguration)
+        NSLog("FINISH ")
+        let sessionTask = urlSession?.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                NSLog("Response data:\n\( NSString(data: data, encoding: 1) ?? "")")
+            }
+            
+            if let error = error {
+                NSLog("\nError: \n \(error.localizedDescription) \n\(error)")
+            }
+            
+            if let response  = response {
+                if self.validate(httpResponse: response,request: request, completion: completion) == false {
+                    return
+                }
+            }
+            
+            completion?(data,error)
+            
+        }
+        sessionTask?.resume()
+        urlSession?.finishTasksAndInvalidate()
+        urlSession = nil
+        return sessionTask!
+    }
+
+    /**
+     Validazione della response (il metodo deve essere implementato nella sottoclasse)
+     - parameter aResponse : URLResponse ricevuta
+     - parameter completion : Completion da chiamare in caso la validazione non vada a buon fine
+     - returns: ritorna true se la response è ritenuta valida, altrimenti è necessario chiamare il completion
+     */
+ 
+    open func validate(httpResponse aResponse: URLResponse, request: URLRequest, completion: ServiceCompletionHandler?) -> Bool {
+        return true
+    }
+
+    //MARK: URLSessionDelegate
+    #if IGNORE_SSL
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+
+        
+            completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+            
+       
+        return
+    }
+    #endif
+    
+
+}
+
+public extension ServiceManager {
+    
+    @discardableResult public func apiRequest<T:Codable>(api: API?, headerParams: [String: String]? = nil, parameters:[String: Any]? = nil, responseClass: T.Type , completion:((_ responseObject: T?,_ error: ServiceError?)->())? ) -> URLSessionTask?  {
+       
+        guard let api = api else { completion?(nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid")); return nil }
+        let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
+        
+        return self.callEndpoint(withRequest: request) { (data, error) in
+            if let data = data {
+                
+                if let responseObject = try? JSONDecoder().decode(T.self, from: data) {
+                    completion?(responseObject,nil)
+                } else {
+                    completion?(nil, ServiceError(error: error ?? DBError.jsonEncodeError, errorCode: -1, errorMessage: nil))
+                }
+                
+            } else {
+                completion?(nil, ServiceError(error: error ?? DBError.emptyData, errorCode: 0, errorMessage: nil))
+            }
+        }
+        
+    }
+}
+
+public struct ServiceError {
+    var error: Error?
+    var errorCode: Int?
+    var errorMessage: String?
+}
+
+public enum DBError: Error {
+    case emptyData
+    case jsonEncodeError
+    case serviceError
+    case invalidURL
+}
+
+
+open class API {
+
+    let url: URL
+    let method: HttpMethod
+    public init?(url: String, method: HttpMethod = .get) {
+        if let url = URL(string: url) {
+            self.url = url
+            self.method = method
+        } else {
+            return nil
+        }
+    }
+    
+}
