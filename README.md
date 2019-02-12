@@ -7,7 +7,7 @@
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+Simple URLSession Wrapper
 
 ## Requirements
 
@@ -17,7 +17,7 @@ DBServiceManager is available through [CocoaPods](https://cocoapods.org). To ins
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'DBServiceManager'
+  pod 'DBServiceManager', :git => 'https://github.com/digitalbrain/DBServiceManager', :tag => '0.1.0'
 ```
 
 ## Author
