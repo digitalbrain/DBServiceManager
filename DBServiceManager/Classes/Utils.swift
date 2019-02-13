@@ -14,7 +14,7 @@ extension Encodable {
         return dictionary
     }
     
-    var dictionary: [String: Any] {
+    public var dictionary: [String: Any] {
         get {
             if let dict = try? self.asDictionary() {
                 return dict
