@@ -30,7 +30,7 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		9678B9AD0E19F78508506D85 /* DBServiceManager.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DBServiceManager.podspec; path = ../DBServiceManager.podspec; sourceTree = "<group>"; };
+		9678B9AD0E19F78508506D85 /* DBServiceManager.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DBServiceManager.podspec; path = ../DBServiceManager.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B39E193F4F9E4D8D816930F8 /* Pods-DBServiceManager_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBServiceManager_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-DBServiceManager_Tests/Pods-DBServiceManager_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		D13D03055A91F83B58E341BD /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		D769CEDF4363AD7DBB28B5DF /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };

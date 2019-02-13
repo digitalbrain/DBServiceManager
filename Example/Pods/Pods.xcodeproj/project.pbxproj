@@ -12,6 +12,7 @@
 		4BEF93107F0B3D944ADB617AF40A5367 /* Pods-DBServiceManager_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C51E1959B29A2FDDCB8071A8F400B1A8 /* Pods-DBServiceManager_Example-dummy.m */; };
 		9EC8940DD81EDAE4DEE6DA08C39B1CD7 /* DBServiceManager-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = BBA3C26FBF1679A0D2F71EF0B1141B18 /* DBServiceManager-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A48FD70FA9A65C43538B2885C7D2FC1E /* Pods-DBServiceManager_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A2B106CA139EEA694E8B39704E41801 /* Pods-DBServiceManager_Tests-dummy.m */; };
+		B407BB3722142BAD0046CB4E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B407BB3622142BAD0046CB4E /* Utils.swift */; };
 		B48883AB2211B36200EE47F9 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48883AA2211B36200EE47F9 /* ServiceManager.swift */; };
 		C8A343CED68A31C41886226D28159298 /* DBServiceManager-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 598FF2529075204C53BE9904D0249862 /* DBServiceManager-dummy.m */; };
 		CFE931C0F275D4BCA0F75D40EA3F04BD /* Pods-DBServiceManager_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 535BC75A573E35CB94D0AFC354C28811 /* Pods-DBServiceManager_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -56,6 +57,7 @@
 		95CBB63C994412A98FEDE6465D1BF225 /* Pods-DBServiceManager_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DBServiceManager_Example.modulemap"; sourceTree = "<group>"; };
 		A748E91C7FFC378A21A79D8EB2409366 /* Pods-DBServiceManager_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DBServiceManager_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		B12BF448E94FE0F800AE98245D14B830 /* Pods-DBServiceManager_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DBServiceManager_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		B407BB3622142BAD0046CB4E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Utils.swift; path = DBServiceManager/Classes/Utils.swift; sourceTree = "<group>"; };
 		B48883AA2211B36200EE47F9 /* ServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceManager.swift; path = DBServiceManager/Classes/ServiceManager.swift; sourceTree = "<group>"; };
 		BBA3C26FBF1679A0D2F71EF0B1141B18 /* DBServiceManager-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DBServiceManager-umbrella.h"; sourceTree = "<group>"; };
 		BBFEFF0A57910AF4139E4DC198CBAF58 /* Pods-DBServiceManager_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DBServiceManager_Tests-umbrella.h"; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 		BA627DC1CE7BC8B1882A8618318364E4 /* DBServiceManager */ = {
 			isa = PBXGroup;
 			children = (
+				B407BB3622142BAD0046CB4E /* Utils.swift */,
 				B48883AA2211B36200EE47F9 /* ServiceManager.swift */,
 				7E8F9373DF9308CFC042B3F01CBC82DF /* Pod */,
 				C57D96569299DD41BD1C279CA0F728E8 /* Support Files */,
@@ -377,6 +380,7 @@
 			files = (
 				C8A343CED68A31C41886226D28159298 /* DBServiceManager-dummy.m in Sources */,
 				B48883AB2211B36200EE47F9 /* ServiceManager.swift in Sources */,
+				B407BB3722142BAD0046CB4E /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
