@@ -13,7 +13,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        ServiceManager.shared.loggerEnabled = true
         
         ServiceManager.shared.apiRequest(api: .users, parameters: ["page":1], responseClass: ExampleResponse.self) { (response, error) in
             if let response = response {

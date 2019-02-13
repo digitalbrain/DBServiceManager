@@ -21,7 +21,7 @@ open class ServiceManager: NSObject, URLSessionDelegate {
 
     public var sessionConfiguration = URLSessionConfiguration.default
     
-
+    public var loggerEnabled: Bool = false
     
     /**
      Costruisce la URL request
@@ -56,21 +56,28 @@ open class ServiceManager: NSObject, URLSessionDelegate {
     
     
     @discardableResult func callEndpoint(withRequest request: URLRequest, completion: ServiceCompletionHandler?) -> URLSessionTask {
-    
-        print("Start Req to \(request.url?.absoluteString ?? "")")
+        service_print("______________________________________________________________")
+        let request_id = UUID().uuidString.replacingOccurrences(of: "-", with: "")
+        service_print("[\(request_id)] Request URL: \(request.url?.absoluteString ?? "")")
         
         if let bodyData = request.httpBody {
-            NSLog("Request data:\n \(NSString(data:bodyData, encoding:1) ?? "")")
+            service_print("[\(request_id)] Request data:\n\(NSString(data:bodyData, encoding:1) ?? "")")
         }
-        var urlSession: URLSession? = URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: nil)//URLSession(configuration: self.sessionConfiguration)
-        NSLog("FINISH ")
+        
+        var urlSession: URLSession? = URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: nil)
+        
         let sessionTask = urlSession?.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                NSLog("Response data:\n\( NSString(data: data, encoding: 1) ?? "")")
+        
+            if let data = data, self.loggerEnabled {
+                if let data = try? JSONSerialization.data(withJSONObject: JSONSerialization.jsonObject(with: data, options: .mutableContainers), options: .prettyPrinted) {
+                    service_print("[\(request_id)] Response data:\n\( String(data: data, encoding: .utf8) ?? "nil")")
+                } else {
+                    service_print("[\(request_id)] Response data:\n\( String(data: data, encoding: .utf8) ?? "nil")")
+                }
             }
             
             if let error = error {
-                NSLog("\nError: \n \(error.localizedDescription) \n\(error)")
+                service_print("[\(request_id)] Error: \n \(error.localizedDescription) \n\(error)")
             }
             
             if let response  = response {
@@ -78,7 +85,7 @@ open class ServiceManager: NSObject, URLSessionDelegate {
                     return
                 }
             }
-            
+            service_print("***********************************************************************")
             completion?(data,error)
             
         }
@@ -166,3 +173,6 @@ open class API {
     }
     
 }
+
+
+

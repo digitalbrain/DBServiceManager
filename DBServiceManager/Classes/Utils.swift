@@ -24,3 +24,10 @@ extension Encodable {
         }
     }
 }
+
+
+internal func service_print(_ string: String) {
+    if ServiceManager.shared.loggerEnabled {
+        print(string)
+    }
+}
