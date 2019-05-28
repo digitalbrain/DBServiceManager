@@ -1,9 +1,9 @@
 {
   "name": "DBServiceManager",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "summary": "A short description of DBServiceManager.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/digitalbrain@hotmail.it/DBServiceManager",
+  "homepage": "https://github.com/digitalbrain/DBServiceManager",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,11 +12,12 @@
     "digitalbrain@hotmail.it": "digitalbrain@hotmail.it"
   },
   "source": {
-    "git": "https://github.com/digitalbrain@hotmail.it/DBServiceManager.git",
-    "tag": "0.1.0"
+    "git": "https://github.com/digitalbrain/DBServiceManager.git",
+    "tag": "0.1.5"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
+  "swift_version": "5.0",
   "source_files": "DBServiceManager/Classes/**/*"
 }

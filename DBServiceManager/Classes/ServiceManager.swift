@@ -123,7 +123,7 @@ open class ServiceManager: NSObject, URLSessionDelegate {
 
 public extension ServiceManager {
     
-    @discardableResult public func apiRequest<T:Codable>(api: API?, headerParams: [String: String]? = nil, parameters:[String: Any]? = nil, responseClass: T.Type , completion:((_ responseObject: T?,_ error: ServiceError?)->())? ) -> URLSessionTask?  {
+    @discardableResult func apiRequest<T:Codable>(api: API?, headerParams: [String: String]? = nil, parameters:[String: Any]? = nil, responseClass: T.Type , completion:((_ responseObject: T?,_ error: ServiceError?)->())? ) -> URLSessionTask?  {
        
         guard let api = api else { completion?(nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid")); return nil }
         let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
