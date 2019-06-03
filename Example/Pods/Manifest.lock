@@ -1,5 +1,5 @@
 PODS:
-  - DBServiceManager (0.1.5)
+  - DBServiceManager (0.1.6)
 
 DEPENDENCIES:
   - DBServiceManager (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DBServiceManager: 7693b7fcba9a8b1e3da14de380ba25a66ac92943
+  DBServiceManager: 6aac07b9d09926bcad703744fcc2ca1842ac16ae
 
 PODFILE CHECKSUM: 08dc098173fd2f736b683cacfe5d49de5643f30f
 

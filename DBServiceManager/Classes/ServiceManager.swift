@@ -13,7 +13,7 @@ public enum HttpMethod : String, RawRepresentable {
     case get = "GET"
 }
 
-public typealias ServiceCompletionHandler = ((_ result: Data?, _ error: Error?) -> ())
+public typealias ServiceCompletionHandler = ((_ result: Data?, _ response: URLResponse? , _ error: Error?) -> ())
 
 open class ServiceManager: NSObject, URLSessionDelegate {
 
@@ -86,7 +86,7 @@ open class ServiceManager: NSObject, URLSessionDelegate {
                 }
             }
             service_print("***********************************************************************")
-            completion?(data,error)
+            completion?(data,response,error)
             
         }
         sessionTask?.resume()
@@ -128,7 +128,7 @@ public extension ServiceManager {
         guard let api = api else { completion?(nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid")); return nil }
         let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
         
-        return self.callEndpoint(withRequest: request) { (data, error) in
+        return self.callEndpoint(withRequest: request) { (data, response, error) in
             if let data = data {
                 
                 if let responseObject = try? JSONDecoder().decode(T.self, from: data) {
