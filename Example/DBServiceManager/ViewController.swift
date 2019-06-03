@@ -15,9 +15,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         ServiceManager.shared.loggerEnabled = true
         
-        ServiceManager.shared.apiRequest(api: .users, parameters: ["page":1], responseClass: ExampleResponse.self) { (response, error) in
-            if let response = response {
-                for resp in response.data {
+        ServiceManager.shared.apiRequest(api: .users, parameters: ["page":1], responseClass: ExampleResponse.self) { (responseData, response, error) in
+            if let responseData = responseData {
+                for resp in responseData.data  {
                     print("\(resp.last_name) -> \(resp.first_name) : \(resp.avatar!)")
                 }
             }
@@ -67,7 +67,7 @@ enum ApiMethods: String {
 }
 extension ServiceManager {
     
-    @discardableResult  func apiRequest<T:Codable>(api: ApiMethods, parameters:[String: Any]? = nil, responseClass: T.Type , completion:((_ responseObject: T?,_ error: ServiceError?)->())? ) -> URLSessionTask?  {
+    @discardableResult  func apiRequest<T:Codable>(api: ApiMethods, parameters:[String: Any]? = nil, responseClass: T.Type , completion:((_ responseObject: T?,_ response: URLResponse? ,_ error: ServiceError?)->())? ) -> URLSessionTask?  {
         return self.apiRequest(api: api.api(), headerParams: nil, parameters: parameters, responseClass: responseClass, completion: completion)
     }
 

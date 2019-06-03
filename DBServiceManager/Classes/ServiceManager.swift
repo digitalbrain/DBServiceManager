@@ -123,22 +123,22 @@ open class ServiceManager: NSObject, URLSessionDelegate {
 
 public extension ServiceManager {
     
-    @discardableResult func apiRequest<T:Codable>(api: API?, headerParams: [String: String]? = nil, parameters:[String: Any]? = nil, responseClass: T.Type , completion:((_ responseObject: T?,_ error: ServiceError?)->())? ) -> URLSessionTask?  {
+    @discardableResult func apiRequest<T:Codable>(api: API?, headerParams: [String: String]? = nil, parameters:[String: Any]? = nil, responseClass: T.Type , completion:((_ responseObject: T?, _ response: URLResponse? , _ error: ServiceError?)->())? ) -> URLSessionTask?  {
        
-        guard let api = api else { completion?(nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid")); return nil }
+        guard let api = api else { completion?(nil,nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid")); return nil }
         let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
         
         return self.callEndpoint(withRequest: request) { (data, response, error) in
             if let data = data {
                 
                 if let responseObject = try? JSONDecoder().decode(T.self, from: data) {
-                    completion?(responseObject,nil)
+                    completion?(responseObject,response,nil)
                 } else {
-                    completion?(nil, ServiceError(error: error ?? DBError.jsonEncodeError, errorCode: -1, errorMessage: nil))
+                    completion?(nil,response ,ServiceError(error: error ?? DBError.jsonEncodeError, errorCode: -1, errorMessage: nil))
                 }
                 
             } else {
-                completion?(nil, ServiceError(error: error ?? DBError.emptyData, errorCode: 0, errorMessage: nil))
+                completion?(nil,response, ServiceError(error: error ?? DBError.emptyData, errorCode: 0, errorMessage: nil))
             }
         }
         
