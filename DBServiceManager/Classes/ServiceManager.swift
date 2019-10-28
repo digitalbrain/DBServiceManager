@@ -31,15 +31,28 @@ open class ServiceManager: NSObject, URLSessionDelegate {
      - parameter httpMethod: Get/Post
      */
     func request(withUrl endPoint:String, parameters: [String : Any], headers: [String : String], httpMethod: HttpMethod) -> URLRequest {
+        var endPoint = endPoint
+        if httpMethod == .get {
+            var queryString: String {
+                 var output: String = ""
+                 for (key,value) in parameters {
+                     output +=  "\(key)=\(value)&"
+                 }
+                 output = String(output.dropLast())
+                 return output
+              }
+            endPoint = "\(endPoint)?\(queryString)"
+        }
         var request: URLRequest = URLRequest(url: URL(string: endPoint)!)
         request.httpMethod = httpMethod.rawValue
-        
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
-            request.httpBody = jsonData
-            
-        } catch {
-            
+        if httpMethod == .post {
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
+                request.httpBody = jsonData
+                
+            } catch {
+                
+            }
         }
         for aKey in headers.keys {
             request.setValue(headers[aKey], forHTTPHeaderField: aKey)
