@@ -32,7 +32,7 @@ open class ServiceManager: NSObject, URLSessionDelegate {
      */
     func request(withUrl endPoint:String, parameters: [String : Any], headers: [String : String], httpMethod: HttpMethod) -> URLRequest {
         var endPoint = endPoint
-        if httpMethod == .get {
+        if httpMethod == .get && parameters.isEmpty == false {
             var queryString: String {
                  var output: String = ""
                  for (key,value) in parameters {
