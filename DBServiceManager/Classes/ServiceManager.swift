@@ -144,24 +144,42 @@ public extension ServiceManager {
         return self.callEndpoint(withRequest: request) { (data, response, error) in
             if let data = data {
                 
-                if let responseObject = try? JSONDecoder().decode(T.self, from: data) {
-                    completion?(responseObject,response,nil)
-                } else {
-                    completion?(nil,response ,ServiceError(error: error ?? DBError.jsonEncodeError, errorCode: -1, errorMessage: nil))
+                do {
+                    let responseObject = try JSONDecoder().decode(T.self, from: data)
+                      completion?(responseObject,response,nil)
+                } catch {
+                    print("error -> \(error)")
+                    completion?(nil,response ,ServiceError(error: error , errorCode: (response as? HTTPURLResponse)?.statusCode ?? -1, errorMessage: nil))
                 }
+          
                 
             } else {
-                completion?(nil,response, ServiceError(error: error ?? DBError.emptyData, errorCode: 0, errorMessage: nil))
+                completion?(nil,response, ServiceError(error: error ?? DBError.emptyData, errorCode:  (response as? HTTPURLResponse)?.statusCode ?? -1, errorMessage: nil))
             }
         }
-        
     }
+    
+    @discardableResult func apiRequestRaw(api: API?, headerParams: [String: String]? = nil, parameters:[String: Any]? = nil , completion:((_ responseData: Data?, _ response: URLResponse? , _ error: ServiceError?)->())? ) -> URLSessionTask?  {
+       
+        guard let api = api else { completion?(nil,nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid")); return nil }
+        let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
+        
+        return self.callEndpoint(withRequest: request) { (data, response, error) in
+            if let data = data {
+                completion?(data,response,nil)
+          
+            } else {
+                completion?(nil,response, ServiceError(error: error ?? DBError.emptyData, errorCode: (response as? HTTPURLResponse)?.statusCode ?? -1, errorMessage: nil))
+            }
+        }
+    }
+    
 }
 
 public struct ServiceError {
-    var error: Error?
-    var errorCode: Int?
-    var errorMessage: String?
+    public var error: Error?
+    public var errorCode: Int?
+    public var errorMessage: String?
 }
 
 public enum DBError: Error {
