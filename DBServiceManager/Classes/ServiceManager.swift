@@ -11,6 +11,8 @@ import UIKit
 public enum HttpMethod : String, RawRepresentable {
     case post = "POST"
     case get = "GET"
+    case put = "PUT"
+    case delete = "DELETE"
 }
 
 public typealias ServiceCompletionHandler = ((_ result: Data?, _ response: URLResponse? , _ error: Error?) -> ())
@@ -136,7 +138,11 @@ open class ServiceManager: NSObject, URLSessionDelegate {
 
 public extension ServiceManager {
     
-    @discardableResult func apiRequest<T:Codable>(api: API?, headerParams: [String: String]? = nil, parameters:[String: Any]? = nil, responseClass: T.Type , completion:((_ responseObject: T?, _ response: URLResponse? , _ error: ServiceError?)->())? ) -> URLSessionTask?  {
+    @discardableResult func apiRequest<T:Codable>(api: API?,
+                                                  headerParams: [String: String]? = nil,
+                                                  parameters:[String: Any]? = nil,
+                                                  responseClass: T.Type,
+                                                  completion:((_ responseObject: T?, _ response: URLResponse? , _ error: ServiceError?)->())? ) -> URLSessionTask?  {
        
         guard let api = api else { completion?(nil,nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid")); return nil }
         let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
@@ -159,7 +165,10 @@ public extension ServiceManager {
         }
     }
     
-    @discardableResult func apiRequestRaw(api: API?, headerParams: [String: String]? = nil, parameters:[String: Any]? = nil , completion:((_ responseData: Data?, _ response: URLResponse? , _ error: ServiceError?)->())? ) -> URLSessionTask?  {
+    @discardableResult func apiRequestRaw(api: API?,
+                                          headerParams: [String: String]? = nil,
+                                          parameters:[String: Any]? = nil ,
+                                          completion:((_ responseData: Data?, _ response: URLResponse? , _ error: ServiceError?)->())? ) -> URLSessionTask?  {
        
         guard let api = api else { completion?(nil,nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid")); return nil }
         let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
@@ -174,6 +183,35 @@ public extension ServiceManager {
         }
     }
     
+    @discardableResult func download(api: API?,
+                                     headerParams: [String: String]? = nil,
+                                     parameters:[String: Any]? = nil,
+                                     destinationPath: String,
+                                     completion:((_ success: Bool, _ response: URLResponse? , _ error: ServiceError?)->())? ) -> URLSessionDownloadTask? {
+        
+        guard let api = api else {
+            completion?(false,nil,ServiceError(error: DBError.invalidURL, errorCode: -2, errorMessage: "URL is invalid"))
+            return nil
+        }
+        let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
+        let urlSession: URLSession? = URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: nil)
+        let destinationURL = URL(fileURLWithPath: destinationPath)
+        let task = urlSession?.downloadTask(with: request, completionHandler: { (url, response, error) in
+            if let url = url {
+                do {
+                    try FileManager.default.copyItem(at: url, to: destinationURL)
+                    completion?(true, response, nil)
+                } catch {
+                    completion?(false, response, ServiceError(error: error, errorCode: -2, errorMessage: "File Manager error"))
+                }
+                
+            } else {
+                completion?(false, response, ServiceError(error: error, errorCode: -3, errorMessage: "Something goes wrong"))
+            }
+            
+        })
+        return task
+    }
 }
 
 public struct ServiceError {
@@ -204,6 +242,3 @@ open class API {
     }
     
 }
-
-
-
