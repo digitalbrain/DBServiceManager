@@ -210,6 +210,10 @@ public extension ServiceManager {
             }
             
         })
+        task?.resume()
+        urlSession?.finishTasksAndInvalidate()
+        urlSession = nil
+             
         return task
     }
 }
