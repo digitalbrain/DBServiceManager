@@ -32,7 +32,7 @@ open class ServiceManager: NSObject, URLSessionDelegate {
      - parameter headers : Dizionario chiave valore dei campi da inviare come Http header
      - parameter httpMethod: Get/Post
      */
-    func request(withUrl endPoint:String, parameters: [String : Any], headers: [String : String], httpMethod: HttpMethod) -> URLRequest {
+    public func request(withUrl endPoint:String, parameters: [String : Any], headers: [String : String], httpMethod: HttpMethod) -> URLRequest {
         var endPoint = endPoint
         if httpMethod == .get && parameters.isEmpty == false {
             var queryString: String {
@@ -70,7 +70,7 @@ open class ServiceManager: NSObject, URLSessionDelegate {
     }
     
     
-    @discardableResult func callEndpoint(withRequest request: URLRequest, completion: ServiceCompletionHandler?) -> URLSessionTask {
+    @discardableResult public func callEndpoint(withRequest request: URLRequest, completion: ServiceCompletionHandler?) -> URLSessionTask {
         service_print("______________________________________________________________")
         let request_id = UUID().uuidString.replacingOccurrences(of: "-", with: "")
         service_print("[\(request_id)] Request URL: \(request.url?.absoluteString ?? "")")
@@ -194,7 +194,7 @@ public extension ServiceManager {
             return nil
         }
         let request = self.request(withUrl:api.url.absoluteString, parameters: parameters ?? [:], headers: headerParams ?? [:], httpMethod: api.method)
-        let urlSession: URLSession? = URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: nil)
+        var urlSession: URLSession? = URLSession(configuration: self.sessionConfiguration, delegate: self, delegateQueue: nil)
         let destinationURL = URL(fileURLWithPath: destinationPath)
         let task = urlSession?.downloadTask(with: request, completionHandler: { (url, response, error) in
             if let url = url {
